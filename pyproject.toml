@@ -1,0 +1,15 @@
+[project]
+name = "ecgtokenizer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "einops>=0.8.1",
+    "numpy>=2.2.5",
+    "scikit-learn>=1.6.1",
+    "timm>=1.0.15",
+    "torch>=2.6.0",
+    "tqdm>=4.67.1",
+    "wfdb>=4.3.0",
+]

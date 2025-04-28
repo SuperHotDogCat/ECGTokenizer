@@ -11,17 +11,18 @@ import os
 
 
 class QRSTokenizer(nn.Module):
-
     def __init__(self, fs, max_len, token_len, used_chans=None):
         super(QRSTokenizer, self).__init__()
-        print('Make sure that ECG Leads are sorted by ["I","II","III","aVR","aVL","aVF","V1","V2","V3","V4","V5","V6"]')
+        print(
+            'Make sure that ECG Leads are sorted by ["I","II","III","aVR","aVL","aVF","V1","V2","V3","V4","V5","V6"]'
+        )
         self.fs = fs
         self.max_len = max_len
         self.token_len = token_len
         self.used_chans = used_chans
 
     def qrs_detection(self, ecg_signal):
-        channels, _ = ecg_signal.shape # [C, signal value]
+        channels, _ = ecg_signal.shape  # [C, signal value]
         all_qrs_inds = []
 
         for channel_index in range(channels):

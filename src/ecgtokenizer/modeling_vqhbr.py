@@ -168,7 +168,7 @@ class VQHBR(nn.Module):
                 f"all_samples_{target_idx}",
             )
             os.makedirs(folder_path, exist_ok=True)
-            
+
             random_indices = np.random.choice(positions, size=100, replace=False)
             corresponding_data = data[random_indices]
             np.save(
@@ -179,14 +179,14 @@ class VQHBR(nn.Module):
                 ),
                 corresponding_data,
             )
-            num_signals = corresponding_data.shape[0] 
+            num_signals = corresponding_data.shape[0]
             rows = cols = int(np.ceil(np.sqrt(num_signals)))
 
             plt.figure(figsize=(cols * 3, rows * 3))
 
             for i, signal in enumerate(corresponding_data):
                 plt.subplot(rows, cols, i + 1)
-                plt.plot(signal) 
+                plt.plot(signal)
                 plt.title(f"Sample {i}", fontsize=8)
                 plt.axis("off")
 
@@ -197,14 +197,12 @@ class VQHBR(nn.Module):
             plt.close()
 
             for i, signal in enumerate(corresponding_data):
-
                 plt.figure(dpi=300)
-                plt.plot(signal,linewidth=2)
-                plt.gca().set_xticks([]) 
-                plt.gca().set_yticks([])  
+                plt.plot(signal, linewidth=2)
+                plt.gca().set_xticks([])
+                plt.gca().set_yticks([])
 
                 # plt.title(f"Idx {target_idx} - Sample {i}")
-
 
                 output_file = os.path.join(folder_path, f"sample_{i}.png")
                 plt.savefig(output_file, dpi=300)
@@ -259,14 +257,14 @@ class VQHBR(nn.Module):
     def plot_ecg_beats(self, x):
         beats, length = x.shape
 
-        cols = int(np.ceil(np.sqrt(beats))) 
-        rows = int(np.ceil(beats / cols)) 
+        cols = int(np.ceil(np.sqrt(beats)))
+        rows = int(np.ceil(beats / cols))
 
         fig, axs = plt.subplots(
             rows, cols, figsize=(cols * 3, rows * 3), constrained_layout=True
         )
 
-        axs = axs.ravel() 
+        axs = axs.ravel()
 
         for i in range(beats):
             axs[i].plot(x[i], color="blue")

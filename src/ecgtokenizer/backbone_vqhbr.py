@@ -132,7 +132,6 @@ class TemporalEmbedding(nn.Module):
 # if Encoder == True, use Encoder and the input of TokenEmbedding is time_window.
 # if Encoder == False, use Decoder and the input of TokenEmbedding is code_dim.
 class VqhbrBackbone(nn.Module):
-
     def __init__(
         self,
         seq_len,

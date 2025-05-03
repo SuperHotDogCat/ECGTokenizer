@@ -13,3 +13,11 @@ print(data.shape)
 tokenizer = ECGTokenizer()
 out = tokenizer(data)
 print(out)
+
+data, fields = wfdb.rdsamp("test_wave/40689238")
+data = np.array(data).transpose(1, 0)[np.newaxis, :, :1500] # 今の構造だと1500 sequenceまでしか対応できないので,　今後訓練することがあったらやる
+print(data, fields)
+print(data.shape)
+tokenizer = ECGTokenizer()
+out = tokenizer(data)
+print(out)

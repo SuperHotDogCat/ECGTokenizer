@@ -121,7 +121,6 @@ class TemporalEmbedding(nn.Module):
     def __init__(self, num_embeddings, embed_dim):
         super(TemporalEmbedding, self).__init__()
         self.embed = nn.Embedding(num_embeddings, embed_dim)
-
     def forward(self, x, time_index_matrix):
         temporal_embeddings = self.embed(
             time_index_matrix

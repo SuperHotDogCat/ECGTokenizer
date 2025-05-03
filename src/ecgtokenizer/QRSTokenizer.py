@@ -6,7 +6,6 @@ from wfdb import processing
 import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 import os
 
 
@@ -31,10 +30,6 @@ class QRSTokenizer(nn.Module):
                 sig=lead_signal, fs=self.fs, verbose=False
             )
             all_qrs_inds.append(qrs_inds)
-
-        # lead_signal = ecg_signal[0, :]
-        # qrs_inds = processing.xqrs_detect(sig=lead_signal, fs=self.fs, verbose=False)
-
         return all_qrs_inds
 
     def extract_qrs_segments(self, ecg_signal, qrs_inds):
@@ -142,7 +137,7 @@ class QRSTokenizer(nn.Module):
         batch_in_chans = []
         batch_in_times = []
 
-        for batch in tqdm(range(bs), desc=f"Detect Batch QRS"):
+        for batch in range(bs):
             ecg_signal = x[batch]
             qrs_inds = self.qrs_detection(ecg_signal)
             channel_qrs_segments = self.extract_qrs_segments(ecg_signal, qrs_inds)

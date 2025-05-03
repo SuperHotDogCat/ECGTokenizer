@@ -20,3 +20,12 @@ for i in range(10, 20):
     plt.plot(batch_qrs_seq[0, i])
     plt.show()
     plt.clf()
+
+data, fields = wfdb.rdsamp("test_wave/40689238")
+data = np.array(data).transpose(1, 0)[np.newaxis, :, :]
+batch_qrs_seq, batch_in_chans, batch_in_times = tokenizer(data)
+print(batch_qrs_seq, batch_in_chans, batch_in_times)
+for i in range(0, 10):
+    plt.plot(batch_qrs_seq[0, i])
+    plt.show()
+    plt.clf()

@@ -8,7 +8,7 @@ from ecgtokenizer.QRSTokenizer import QRSTokenizer
 from ecgtokenizer.modeling_vqhbr import get_model_default_params, vqhbr, VQHBR
 
 
-class ECGTokenizer(nn.Module):
+class ECGTokenizer:
     def __init__(
         self,
         model_path: Optional[str] = None,
@@ -40,25 +40,24 @@ class ECGTokenizer(nn.Module):
             qrs_config = dict(
                 fs=100, max_len=256, token_len=96, used_chans=[i for i in range(12)]
             )
-        qrs_tokenizer = QRSTokenizer(**qrs_config)
+        qrs_tokenizer = QRSTokenizer(**qrs_config).eval()
 
         if not vqvhr_config:
-            vqhbr_model = vqhbr()
+            vqhbr_model = vqhbr().eval()
         else:
-            vqhbr_model = VQHBR(**vqvhr_config)
+            vqhbr_model = VQHBR(**vqvhr_config).eval()
         param = torch.load(
             model_path, map_location=torch.device("cpu"), weights_only=False
         )
         vqhbr_model.load_state_dict(param["model"])
 
-        self.qrs_tokenizer = qrs_tokenizer
-        self.vqhbr_model = vqhbr_model
+        self.qrs_tokenizer = qrs_tokenizer.eval()
+        self.vqhbr_model = vqhbr_model.eval()
         self.ignore_index = ignore_index
         self.add_cls_to_attention_mask = add_cls_to_attention_mask
-        self.eval()  # 基本的にtokenizeはevalで運用する
         self.all_reduce_fn = lambda x: None # ddpの対象にはしない
 
-    def forward(self, ecg):
+    def __call__(self, ecg):
         batch_qrs_seq, batch_in_chans, batch_in_times = self.qrs_tokenizer(ecg)
         batch_qrs_seq = torch.tensor(batch_qrs_seq)
         batch_in_chans = torch.tensor(batch_in_chans)

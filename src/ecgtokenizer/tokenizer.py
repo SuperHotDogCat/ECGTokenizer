@@ -59,4 +59,6 @@ class ECGTokenizer(nn.Module):
         batch_in_chans = torch.tensor(batch_in_chans)
         batch_in_times = torch.tensor(batch_in_times)
         out = self.vqhbr_model.get_tokens(batch_qrs_seq, batch_in_chans, batch_in_times)
+        out["in_chan_matrix"] = batch_in_chans
+        out["in_time_matrix"] = batch_in_times
         return out

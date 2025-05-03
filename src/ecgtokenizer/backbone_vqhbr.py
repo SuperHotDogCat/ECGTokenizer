@@ -55,7 +55,6 @@ class Attention(nn.Module):
         out = rearrange(out, "b h n d -> b n (h d)")
         return self.to_out(out)
 
-
 class Transformer(nn.Module):
     def __init__(self, embed_dim, depth, heads, dim_head, mlp_dim, dropout=0.0):
         super().__init__()

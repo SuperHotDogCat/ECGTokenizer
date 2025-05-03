@@ -157,7 +157,7 @@ class NormEMAVectorQuantizer(nn.Module):
         self.statistic_code_usage = statistic_code_usage
         if statistic_code_usage:
             self.register_buffer("cluster_size", torch.zeros(n_embed))
-        if distributed.is_available() and distributed.is_initialized():
+        if self.training and distributed.is_available() and distributed.is_initialized():
             print(
                 "ddp is enable, so use ddp_reduce to sync the statistic_code_usage for each gpu!"
             )

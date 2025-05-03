@@ -60,7 +60,7 @@ class ECGTokenizer:
     def get_tokens(self, batch_qrs_seq, batch_in_chans, batch_in_times):
         out = self.vqhbr_model.get_tokens(batch_qrs_seq, batch_in_chans, batch_in_times)
         return out
-
+    @torch.no_grad()
     def __call__(self, ecg):
         batch_qrs_seq, batch_in_chans, batch_in_times = self.qrs_tokenizer(ecg)
         batch_qrs_seq = torch.tensor(batch_qrs_seq)

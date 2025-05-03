@@ -14,6 +14,8 @@ class ECGTokenizer(nn.Module):
         model_path: Optional[str] = None,
         qrs_config: Optional[dict] = None,
         vqvhr_config: Optional[dict] = None,
+        ignore_index: int = 15,
+        add_cls_to_attention_mask: bool = True,
     ):
         super().__init__()
         if not model_path and os.path.isfile("checkpoint-100-mimiciv.pth"):
@@ -51,6 +53,8 @@ class ECGTokenizer(nn.Module):
 
         self.qrs_tokenizer = qrs_tokenizer
         self.vqhbr_model = vqhbr_model
+        self.ignore_index = ignore_index
+        self.add_cls_to_attention_mask = add_cls_to_attention_mask
         self.eval()  # 基本的にtokenizeはevalで運用する
 
     def forward(self, ecg):
@@ -61,4 +65,9 @@ class ECGTokenizer(nn.Module):
         out = self.vqhbr_model.get_tokens(batch_qrs_seq, batch_in_chans, batch_in_times)
         out["in_chan_matrix"] = batch_in_chans
         out["in_time_matrix"] = batch_in_times
+        attention_mask = (out["token"] != self.ignore_index).int()
+        if self.add_cls_to_attention_mask:
+            ones = torch.ones(attention_mask.size(0), 1, device=attention_mask.device, dtype=attention_mask.dtype)
+            attention_mask = torch.cat([ones, attention_mask], dim=1)
+        out["attention_mask"] = attention_mask # 一応attentionの学習をよくするために追加, ダメなら消す
         return out

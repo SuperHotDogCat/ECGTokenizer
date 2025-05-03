@@ -56,6 +56,7 @@ class ECGTokenizer(nn.Module):
         self.ignore_index = ignore_index
         self.add_cls_to_attention_mask = add_cls_to_attention_mask
         self.eval()  # 基本的にtokenizeはevalで運用する
+        self.all_reduce_fn = lambda x: None # ddpの対象にはしない
 
     def forward(self, ecg):
         batch_qrs_seq, batch_in_chans, batch_in_times = self.qrs_tokenizer(ecg)

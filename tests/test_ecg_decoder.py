@@ -22,15 +22,15 @@ print(data.shape)  # torch.Size([2, channels, seq_len])
 tokenizer = ECGTokenizer()
 out = tokenizer(data)
 for i in range(190, 230):
-    out["attention_mask"][0][i] = 1
-print(out["attention_mask"])
+    out["ecg_attention_mask"][0][i] = 1
+print(out["ecg_attention_mask"])
 params = get_model_default_params()
 model = ECGDecoder(**params)
 
 # 1回目
 out1 = model(
     out["token"],
-    out["attention_mask"],
+    out["ecg_attention_mask"],
     in_chan_matrix=out["in_chan_matrix"],
     in_time_matrix=out["in_time_matrix"],
     return_qrs_tokens=False,
@@ -38,13 +38,13 @@ out1 = model(
 print(out1.shape, out1.sum())
 out = tokenizer(data)
 for i in range(190, 230):
-    out["attention_mask"][0][i] = 1
-print(out["attention_mask"])
+    out["ecg_attention_mask"][0][i] = 1
+print(out["ecg_attention_mask"])
 
 # 2回目（少しトークンをカットする）
 out2 = model(
     out["token"][:, :-10],
-    out["attention_mask"][:, :-10],
+    out["ecg_attention_mask"][:, :-10],
     in_chan_matrix=out["in_chan_matrix"],
     in_time_matrix=out["in_time_matrix"],
     return_qrs_tokens=False,

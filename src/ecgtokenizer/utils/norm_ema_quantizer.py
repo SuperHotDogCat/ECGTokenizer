@@ -171,6 +171,8 @@ class NormEMAVectorQuantizer(nn.Module):
             self.cluster_size = self.cluster_size.to(device)
 
     def forward(self, z):
+        if not self.training:
+            self.all_reduce_fn = nn.Identity()
         z = l2norm(z)
         z_flattened = z.reshape(-1, self.codebook_dim)
         self.embedding.init_embed_(z_flattened)

@@ -103,7 +103,7 @@ class VQHBR(nn.Module):
 
     def get_number_of_tokens(self):
         return self.quantize.n_e
-
+    
     def get_tokens(self, data, in_chan_matrix=None, in_time_matrix=None, **kwargs):
         quantize, embed_ind, loss = self.encode(
             data, in_chan_matrix=in_chan_matrix, in_time_matrix=in_time_matrix

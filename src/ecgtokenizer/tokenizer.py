@@ -50,19 +50,23 @@ class ECGTokenizer:
             model_path, map_location=torch.device("cpu"), weights_only=False
         )
         vqhbr_model.load_state_dict(param["model"])
-
         self.qrs_tokenizer = qrs_tokenizer.eval()
         self.vqhbr_model = vqhbr_model.eval()
         self.ignore_index = ignore_index
         self.add_cls_to_attention_mask = add_cls_to_attention_mask
         self.all_reduce_fn = lambda x: None # ddpの対象にはしない
 
+    @torch.no_grad()
+    def get_tokens(self, batch_qrs_seq, batch_in_chans, batch_in_times):
+        out = self.vqhbr_model.get_tokens(batch_qrs_seq, batch_in_chans, batch_in_times)
+        return out
+
     def __call__(self, ecg):
         batch_qrs_seq, batch_in_chans, batch_in_times = self.qrs_tokenizer(ecg)
         batch_qrs_seq = torch.tensor(batch_qrs_seq)
         batch_in_chans = torch.tensor(batch_in_chans)
         batch_in_times = torch.tensor(batch_in_times)
-        out = self.vqhbr_model.get_tokens(batch_qrs_seq, batch_in_chans, batch_in_times)
+        out = self.get_tokens(batch_qrs_seq, batch_in_chans, batch_in_times)
         out["in_chan_matrix"] = batch_in_chans
         out["in_time_matrix"] = batch_in_times
         attention_mask = (out["token"] != self.ignore_index).int()
